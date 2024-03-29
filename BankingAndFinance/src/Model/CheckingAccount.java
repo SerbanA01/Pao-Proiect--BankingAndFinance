@@ -36,6 +36,6 @@ public class CheckingAccount extends Account  {
         this.debitCardNumber = debitCardNumber;
     }
 
-    
+
 
 }
