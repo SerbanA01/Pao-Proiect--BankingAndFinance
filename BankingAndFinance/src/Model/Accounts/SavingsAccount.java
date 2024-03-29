@@ -1,4 +1,4 @@
-package Model;
+package Model.Accounts;
 
 public class SavingsAccount extends Account{
     private double interestRate;

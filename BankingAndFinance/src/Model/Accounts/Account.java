@@ -1,4 +1,4 @@
-package Model;
+package Model.Accounts;
 
 public class Account {
     //banking account
