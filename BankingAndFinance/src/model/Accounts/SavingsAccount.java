@@ -12,6 +12,10 @@ public class SavingsAccount extends Account{
         this.penalty = penalty;
     }
 
+    public SavingsAccount(Account account){
+        super(account.getAccountNumber(), account.getAccountHolder(), account.getBalance());
+    }
+
     public double getInterestRate() {
         return interestRate;
     }

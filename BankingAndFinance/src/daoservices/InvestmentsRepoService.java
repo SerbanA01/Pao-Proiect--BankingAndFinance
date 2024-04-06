@@ -11,9 +11,9 @@ public class InvestmentsRepoService {
     private RealEstateInvestmentDao realEstateInvestmentDao;
     private StockInvestmentDao stockInvestmentDao;
 
-    public InvestmentsRepoService(RealEstateInvestmentDao realEstateInvestmentDao, StockInvestmentDao stockInvestmentDao) {
-        this.realEstateInvestmentDao = realEstateInvestmentDao;
-        this.stockInvestmentDao = stockInvestmentDao;
+    public InvestmentsRepoService() {
+        this.realEstateInvestmentDao = new RealEstateInvestmentDao();
+        this.stockInvestmentDao = new StockInvestmentDao();
     }
 
     public RealEstateInvestment getRealEstateInvestmentById(String id) {
@@ -36,7 +36,9 @@ public class InvestmentsRepoService {
         return stockInvestment;
     }
 
-    public void removeInvestment(Investment investment) {
+    public void removeInvestment(String investmentType, String id) {
+
+        Investment investment = getInvestment(investmentType, id);
         if(investment == null) {
             System.out.println("Investment not found");
             return;
@@ -46,7 +48,16 @@ public class InvestmentsRepoService {
             case StockInvestment stockInvestment -> stockInvestmentDao.delete(stockInvestment);
             default -> throw new IllegalStateException("Unexpected value: " + investment);
         }
-        System.out.println("Removed " + investment);
+    }
+
+    private Investment getInvestment(String investmentType, String id) {
+        Investment investment = null;
+        switch (investmentType) {
+            case "RealEstateInvestment" -> investment = getRealEstateInvestmentById(id);
+            case "StockInvestment" -> investment = getStockInvestmentById(id);
+            default -> System.out.println("Invalid investment type");
+        }
+        return investment;
     }
 
     public void addInvestment(Investment investment) {
@@ -61,4 +72,6 @@ public class InvestmentsRepoService {
         }
         System.out.println("Added " + investment);
     }
+
+
 }

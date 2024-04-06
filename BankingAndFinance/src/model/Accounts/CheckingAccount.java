@@ -12,6 +12,10 @@ public class CheckingAccount extends Account  {
         this.debitCardNumber = debitCardNumber;
     }
 
+    public CheckingAccount(Account account){
+        super(account.getAccountNumber(), account.getAccountHolder(), account.getBalance());
+    }
+
     public double getOverdraftLimit() {
         return overdraftLimit;
     }

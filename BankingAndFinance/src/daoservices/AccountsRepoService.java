@@ -11,9 +11,9 @@ public class AccountsRepoService {
     private CheckingAccountDao checkingAccountDao;
     private SavingsAccountDao savingsAccountDao;
 
-    public AccountsRepoService(CheckingAccountDao checkingAccountDao, SavingsAccountDao savingsAccountDao) {
-        this.checkingAccountDao = checkingAccountDao;
-        this.savingsAccountDao = savingsAccountDao;
+    public AccountsRepoService() {
+        this.checkingAccountDao = new CheckingAccountDao();
+        this.savingsAccountDao = new SavingsAccountDao();
     }
 
     public CheckingAccount getCheckingAccount(String accountNumber) {
@@ -37,7 +37,9 @@ public class AccountsRepoService {
         return savingsAccount;
     }
 
-    public void removeAccount(Account account) {
+    public void removeAccount(String accountType, String accountNumber) {
+
+        Account account = getAccount(accountType, accountNumber);
         if(account == null) {
             System.out.println("Account not found");
             return;
@@ -47,7 +49,6 @@ public class AccountsRepoService {
             case SavingsAccount savingsAccount -> savingsAccountDao.delete(savingsAccount);
             default -> throw new IllegalStateException("Unexpected value: " + account);
         }
-        System.out.println("Removed " + account);
     }
 
     public void addAccount(Account account) {
@@ -61,5 +62,15 @@ public class AccountsRepoService {
             default -> throw new IllegalStateException("Unexpected value: " + account);
         }
         System.out.println("Added " + account);
+    }
+
+    public Account getAccount(String accountType, String accountNumber) {
+        if(accountType.equals("checking")) {
+            return getCheckingAccount(accountNumber);
+        }
+        if(accountType.equals("savings")) {
+            return getSavingsAccount(accountNumber);
+        }
+        return null;
     }
 }
