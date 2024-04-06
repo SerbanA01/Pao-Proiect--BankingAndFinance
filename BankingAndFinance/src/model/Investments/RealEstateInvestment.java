@@ -1,4 +1,4 @@
-package Model.Investments;
+package model.Investments;
 
 public class RealEstateInvestment extends Investment{
 
@@ -16,4 +16,30 @@ public class RealEstateInvestment extends Investment{
             this.propertyType = propertyType;
             this.annualYield = annualYield;
         }
+
+        public double getSurface() {
+            return surface;
+        }
+
+        public double getPricePerSquareMeter() {
+            return pricePerSquareMeter;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public String getPropertyType() {
+            return propertyType;
+        }
+
+        public String getAnnualYield() {
+            return annualYield;
+        }
+
+        public void setSurface(double surface) {
+            this.surface = surface;
+        }
+
+
 }
