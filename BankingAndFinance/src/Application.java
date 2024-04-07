@@ -36,10 +36,10 @@ public class Application {
 
     private static void menu() {
         System.out.println("Available commands:");
-        System.out.println("create (account/investment)");
-        System.out.println("read (account/investment)");
-        System.out.println("update (account/investment)");
-        System.out.println("delete (account/investment)");
+        System.out.println("create ");
+        System.out.println("read ");
+        System.out.println("update ");
+        System.out.println("delete ");
         System.out.println("quit");
         System.out.println("Enter command:");
     }

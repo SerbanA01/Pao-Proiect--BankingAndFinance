@@ -14,7 +14,7 @@ public class InvestmentsService {
     }
 
     public void create(Scanner scanner) {
-        System.out.println("Enter investment type [realEstate/stock]:");
+        System.out.println("Enter investment type [RealEstate/Stock]:");
         String investmentType = scanner.nextLine().toLowerCase();
         if(!investmentType.equals("realestate") && !investmentType.equals("stock") ) { return; }
         investmentInit(scanner, investmentType);
@@ -30,7 +30,7 @@ public class InvestmentsService {
     }
 
     public void delete(Scanner scanner) {
-        System.out.println("Enter investment type [realEstate/stock]:");
+        System.out.println("Enter investment type [RealEstate/Stock]:");
         String investmentType = scanner.nextLine().toLowerCase();
         System.out.println("Enter investment ID:");
         String id = scanner.nextLine();
@@ -41,7 +41,7 @@ public class InvestmentsService {
     }
 
     public void update(Scanner scanner) {
-        System.out.println("Enter investment type [realEstate/stock]:");
+        System.out.println("Enter investment type [RealEstate/Stock]:");
         String investmentType = scanner.nextLine().toLowerCase();
         if(!investmentType.equals("realestate") && !investmentType.equals("stock") ) { return; }
         System.out.println("Enter investment ID:");
@@ -50,6 +50,7 @@ public class InvestmentsService {
         String investmentName = scanner.nextLine();
         System.out.println("Enter the new investment value:");
         double investmentValue = scanner.nextDouble();
+        scanner.nextLine();
 
         Investment investment = dbservice.getInvestment(investmentType, id);
         if(investment == null) { return; }
@@ -78,6 +79,7 @@ public class InvestmentsService {
         String investmentName = scanner.nextLine();
         System.out.println("Enter the investment value:");
         double investmentValue = scanner.nextDouble();
+        scanner.nextLine();
 
 
         Investment investment = new Investment(investmentIdString, investmentName, investmentValue);
@@ -101,9 +103,10 @@ public class InvestmentsService {
     private void realEstateInit(Scanner scanner, RealEstateInvestment realEstateInvestment) {
         System.out.println("Enter the surface area:");
         double surface = scanner.nextDouble();
+        scanner.nextLine();
         System.out.println("Enter the price per square meter:");
         double pricePerSquareMeter = scanner.nextDouble();
-        scanner.nextLine(); // consume the newline left-over
+        scanner.nextLine();
         System.out.println("Enter the address:");
         String address = scanner.nextLine();
         System.out.println("Enter the property type:");
@@ -124,9 +127,10 @@ public class InvestmentsService {
     private void stockInit(Scanner scanner, StockInvestment stockInvestment) {
         System.out.println("Enter the number of stocks:");
         int numberOfStocks = scanner.nextInt();
+        scanner.nextLine();
         System.out.println("Enter the stock price:");
         double stockPrice = scanner.nextDouble();
-        scanner.nextLine(); // consume the newline left-over to capture the next line of input correctly
+        scanner.nextLine();
         System.out.println("Enter the stock symbol:");
         String stockSymbol = scanner.nextLine();
 

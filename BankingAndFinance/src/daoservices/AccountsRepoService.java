@@ -22,7 +22,7 @@ public class AccountsRepoService {
             System.out.println("Checking Account not found");
             return null;
         }
-        System.out.println("Checking Account found: " + checkingAccount);
+        System.out.println("Checking Account found: " + checkingAccount.getAccountHolder() + " " + checkingAccount.getAccountNumber());
         return checkingAccount;
 
     }
@@ -33,7 +33,7 @@ public class AccountsRepoService {
             System.out.println("Savings Account not found");
             return null;
         }
-        System.out.println("Savings Account found: " + savingsAccount);
+        System.out.println("Savings Account found: " + savingsAccount.getAccountHolder() + " " + savingsAccount.getAccountNumber());
         return savingsAccount;
     }
 
@@ -61,7 +61,7 @@ public class AccountsRepoService {
             case SavingsAccount savingsAccount -> savingsAccountDao.create(savingsAccount);
             default -> throw new IllegalStateException("Unexpected value: " + account);
         }
-        System.out.println("Added " + account);
+        System.out.println("Added " + account.getAccountHolder()+ " to the database");
     }
 
     public Account getAccount(String accountType, String accountNumber) {

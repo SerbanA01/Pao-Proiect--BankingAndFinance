@@ -32,7 +32,7 @@ public class AccountsService {
     public void delete(Scanner scanner){
         System.out.println("Enter the account number:");
         String accountNumber = scanner.nextLine();
-        System.out.println("Enter the account type [saving/checking]:");
+        System.out.println("Enter the account type [savings/checking]:");
         String accountType = scanner.nextLine().toLowerCase();
         if(!accountType.equals("savings") && !accountType.equals("checking") ) { return; }
 
@@ -108,7 +108,7 @@ public class AccountsService {
         scanner.nextLine();
         System.out.println("Enter the debit card number:");
         String debitCardNumber = scanner.nextLine();
-        scanner.nextLine();
+        //scanner.nextLine();
 
         account.setOverdraftLimit(overdraftLimit);
         account.setTransactionFee(transactionFee);

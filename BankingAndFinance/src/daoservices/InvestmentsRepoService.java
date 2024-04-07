@@ -22,7 +22,7 @@ public class InvestmentsRepoService {
             System.out.println("Real Estate Investment not found");
             return null;
         }
-        System.out.println("Real Estate Investment found: " + realEstateInvestment);
+        System.out.println("Real Estate Investment found: " + realEstateInvestment.getInvestmentId() + " " + realEstateInvestment.getInvestmentName());
         return realEstateInvestment;
     }
 
@@ -32,7 +32,7 @@ public class InvestmentsRepoService {
             System.out.println("Stock Investment not found");
             return null;
         }
-        System.out.println("Stock Investment found: " + stockInvestment);
+        System.out.println("Stock Investment found: " + stockInvestment.getInvestmentId() + " " + stockInvestment.getInvestmentName());
         return stockInvestment;
     }
 
@@ -53,8 +53,8 @@ public class InvestmentsRepoService {
     public Investment getInvestment(String investmentType, String id) {
         Investment investment = null;
         switch (investmentType) {
-            case "RealEstateInvestment" -> investment = getRealEstateInvestmentById(id);
-            case "StockInvestment" -> investment = getStockInvestmentById(id);
+            case "realestate" -> investment = getRealEstateInvestmentById(id);
+            case "stock" -> investment = getStockInvestmentById(id);
             default -> System.out.println("Invalid investment type");
         }
         return investment;
@@ -70,7 +70,7 @@ public class InvestmentsRepoService {
             case StockInvestment stockInvestment -> stockInvestmentDao.create(stockInvestment);
             default -> throw new IllegalStateException("Unexpected value: " + investment);
         }
-        System.out.println("Added " + investment);
+        System.out.println("Added " + investment.getInvestmentId() + " " + investment.getInvestmentName() + " to the database");
     }
 
 
