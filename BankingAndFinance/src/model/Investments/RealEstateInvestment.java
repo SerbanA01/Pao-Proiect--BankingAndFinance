@@ -16,6 +16,9 @@ public class RealEstateInvestment extends Investment{
             this.propertyType = propertyType;
             this.annualYield = annualYield;
         }
+        public RealEstateInvestment(Investment investment) {
+            super(investment.getInvestmentId(), investment.getInvestmentName(), investment.getInvestmentValue());
+        }
 
         public double getSurface() {
             return surface;
@@ -40,6 +43,24 @@ public class RealEstateInvestment extends Investment{
         public void setSurface(double surface) {
             this.surface = surface;
         }
+
+        public void setPricePerSquareMeter(double pricePerSquareMeter) {
+            this.pricePerSquareMeter = pricePerSquareMeter;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public void setPropertyType(String propertyType) {
+            this.propertyType = propertyType;
+        }
+
+        public void setAnnualYield(String annualYield) {
+            this.annualYield = annualYield;
+        }
+
+
 
 
 }

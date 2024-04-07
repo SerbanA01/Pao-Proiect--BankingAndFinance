@@ -13,6 +13,9 @@ public class StockInvestment extends Investment {
         this.stockSymbol = stockSymbol;
     }
 
+    public StockInvestment(Investment investment) {
+        super(investment.getInvestmentId(), investment.getInvestmentName(), investment.getInvestmentValue());
+    }
     public int getNumberOfStocks() {
         return numberOfStocks;
     }

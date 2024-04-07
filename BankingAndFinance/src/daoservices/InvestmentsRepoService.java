@@ -50,7 +50,7 @@ public class InvestmentsRepoService {
         }
     }
 
-    private Investment getInvestment(String investmentType, String id) {
+    public Investment getInvestment(String investmentType, String id) {
         Investment investment = null;
         switch (investmentType) {
             case "RealEstateInvestment" -> investment = getRealEstateInvestmentById(id);

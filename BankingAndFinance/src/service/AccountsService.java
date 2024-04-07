@@ -15,7 +15,7 @@ public class AccountsService {
     }
 
     public void create(Scanner scanner){
-        System.out.println("Enter the account type [saving/checking]:");
+        System.out.println("Enter the account type [savings/checking]:");
         String accountType = scanner.nextLine().toLowerCase();
         if(!accountType.equals("savings") && !accountType.equals("checking") ) { return; }
         accountInit(scanner, accountType);
@@ -50,6 +50,7 @@ public class AccountsService {
         String name = scanner.nextLine();
         System.out.println("Enter the balance:");
         double balance = scanner.nextDouble();
+        scanner.nextLine();
 
         Account account = dbService.getAccount(typeOfAccount, accountNumber);
         if(account == null) { return; }
@@ -61,6 +62,7 @@ public class AccountsService {
         }
         if(typeOfAccount.equals("savings")){
             savingAccountInit(scanner, (SavingsAccount) account);
+            System.out.println("Account updated successfully! Welcome " + name + " with account number: " + accountNumber);
         }
 
 
@@ -100,10 +102,13 @@ public class AccountsService {
     private void checkingAccountInit(Scanner scanner, CheckingAccount account){
         System.out.println("Enter the overdraft limit:");
         double overdraftLimit = scanner.nextDouble();
+        scanner.nextLine();
         System.out.println("Enter the transaction fee:");
         double transactionFee = scanner.nextDouble();
+        scanner.nextLine();
         System.out.println("Enter the debit card number:");
         String debitCardNumber = scanner.nextLine();
+        scanner.nextLine();
 
         account.setOverdraftLimit(overdraftLimit);
         account.setTransactionFee(transactionFee);
@@ -121,10 +126,13 @@ public class AccountsService {
 
         System.out.println("Enter the interest rate:");
         double interestRate = scanner.nextDouble();
+        scanner.nextLine();
         System.out.println("Enter the minimum balance:");
         double minimumBalance = scanner.nextDouble();
+        scanner.nextLine();
         System.out.println("Enter the penalty:");
         double penalty = scanner.nextDouble();
+        scanner.nextLine();
 
         account.setInterestRate(interestRate);
         account.setMinimumBalance(minimumBalance);
