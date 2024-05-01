@@ -1,9 +1,10 @@
 package service;
 
 import daoservices.InvestmentsRepoService;
-import model.Investments.Investment;
-import model.Investments.RealEstateInvestment;
-import model.Investments.StockInvestment;
+import model.investments.Investment;
+import model.investments.RealEstateInvestment;
+import model.investments.StockInvestment;
+
 import java.util.Scanner;
 
 public class InvestmentsService {
@@ -13,11 +14,15 @@ public class InvestmentsService {
         this.dbservice = new InvestmentsRepoService();
     }
 
+
+
     public void create(Scanner scanner) {
         System.out.println("Enter investment type [RealEstate/Stock]:");
         String investmentType = scanner.nextLine().toLowerCase();
         if(!investmentType.equals("realestate") && !investmentType.equals("stock") ) { return; }
         investmentInit(scanner, investmentType);
+
+
 
     }
 
@@ -37,6 +42,7 @@ public class InvestmentsService {
 
         if(!investmentType.equals("realestate") && !investmentType.equals("stock") ) { return; }
         dbservice.removeInvestment(investmentType, id);
+
 
     }
 

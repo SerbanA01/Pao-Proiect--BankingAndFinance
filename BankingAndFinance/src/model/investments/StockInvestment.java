@@ -1,4 +1,4 @@
-package model.Investments;
+package model.investments;
 
 public class StockInvestment extends Investment {
 

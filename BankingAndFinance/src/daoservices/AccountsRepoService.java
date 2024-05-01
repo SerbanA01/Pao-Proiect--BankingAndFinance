@@ -1,8 +1,8 @@
 package daoservices;
 
-import model.Accounts.Account;
-import model.Accounts.CheckingAccount;
-import model.Accounts.SavingsAccount;
+import model.accounts.Account;
+import model.accounts.CheckingAccount;
+import model.accounts.SavingsAccount;
 import dao.CheckingAccountDao;
 import dao.SavingsAccountDao;
 

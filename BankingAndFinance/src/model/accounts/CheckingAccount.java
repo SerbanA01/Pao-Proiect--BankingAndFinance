@@ -1,4 +1,4 @@
-package model.Accounts;
+package model.accounts;
 
 public class CheckingAccount extends Account  {
     private double overdraftLimit;

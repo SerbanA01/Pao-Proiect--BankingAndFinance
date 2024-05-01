@@ -1,4 +1,4 @@
-package model.Accounts;
+package model.accounts;
 
 public class Account {
     //banking account

@@ -11,12 +11,12 @@ public class Application {
         AccountsService accountsService = new AccountsService();
         InvestmentsService investmentsService = new InvestmentsService();
 
-        while (true){
+        while (true) {
             menu();
             String command = scanner.nextLine().toLowerCase();
             System.out.println("Command received: " + command);
 
-            switch (command){
+            switch (command) {
                 case "create":
                 case "read":
                 case "delete":
@@ -43,44 +43,56 @@ public class Application {
         System.out.println("quit");
         System.out.println("Enter command:");
     }
+
     private static void processCommand(String command, AccountsService accountsService, InvestmentsService investmentsService, Scanner scanner) {
         System.out.println("Is this for an account or investment?");
         String type = scanner.nextLine().toLowerCase();
-        switch (type) {
-            case "account":
-                switch (command) {
-                    case "create":
-                        accountsService.create(scanner);
-                        break;
-                    case "read":
-                        accountsService.read(scanner);
-                        break;
-                    case "delete":
-                        accountsService.delete(scanner);
-                        break;
-                    case "update":
-                        accountsService.update(scanner);
-                        break;
-                }
-                break;
-            case "investment":
-                switch (command) {
-                    case "create":
-                        investmentsService.create(scanner);
-                        break;
-                    case "read":
-                        investmentsService.read(scanner);
-                        break;
-                    case "delete":
-                        investmentsService.delete(scanner);
-                        break;
-                    case "update":
-                        investmentsService.update(scanner);
-                        break;
-                }
-                break;
-            default:
+        if (type.equals("account"))
+            processAccountCommand(command, accountsService, scanner);
+        else if (type.equals("investment"))
+            processInvestmentCommand(command, investmentsService, scanner);
+        else {
                 System.out.println("Invalid type, please specify 'account' or 'investment'.");
         }
     }
+
+    private static void processAccountCommand(String command, AccountsService accountsService, Scanner scanner) {
+        switch (command) {
+            case "create":
+                accountsService.create(scanner);
+                break;
+            case "read":
+                accountsService.read(scanner);
+                break;
+            case "delete":
+                accountsService.delete(scanner);
+                break;
+            case "update":
+                accountsService.update(scanner);
+                break;
+            default:
+                System.out.println("Invalid command");
+        }
+    }
+
+    private static void processInvestmentCommand(String command, InvestmentsService investmentsService, Scanner scanner) {
+        switch (command) {
+            case "create":
+                investmentsService.create(scanner);
+                break;
+            case "read":
+                investmentsService.read(scanner);
+                break;
+            case "delete":
+                investmentsService.delete(scanner);
+                break;
+            case "update":
+                investmentsService.update(scanner);
+                break;
+            default:
+                System.out.println("Invalid command");
+        }
+    }
 }
+
+

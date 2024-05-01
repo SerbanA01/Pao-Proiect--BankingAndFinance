@@ -1,9 +1,9 @@
 package service;
 
 import daoservices.AccountsRepoService;
-import model.Accounts.Account;
-import model.Accounts.CheckingAccount;
-import model.Accounts.SavingsAccount;
+import model.accounts.Account;
+import model.accounts.CheckingAccount;
+import model.accounts.SavingsAccount;
 
 import java.util.Scanner;
 

@@ -1,8 +1,8 @@
 package daoservices;
 
-import model.Investments.Investment;
-import model.Investments.RealEstateInvestment;
-import model.Investments.StockInvestment;
+import model.investments.Investment;
+import model.investments.RealEstateInvestment;
+import model.investments.StockInvestment;
 import dao.RealEstateInvestmentDao;
 import dao.StockInvestmentDao;
 
@@ -43,6 +43,7 @@ public class InvestmentsRepoService {
             System.out.println("Investment not found");
             return;
         }
+
         switch (investment) {
             case RealEstateInvestment realEstateInvestment -> realEstateInvestmentDao.delete(realEstateInvestment);
             case StockInvestment stockInvestment -> stockInvestmentDao.delete(stockInvestment);

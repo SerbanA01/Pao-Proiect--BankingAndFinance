@@ -2,7 +2,7 @@ package dao;
 
 import java.util.List;
 import java.util.ArrayList;
-import model.Investments.RealEstateInvestment;
+import model.investments.RealEstateInvestment;
 
 public class RealEstateInvestmentDao {
 private static List<RealEstateInvestment> realEstateInvestments = new ArrayList<RealEstateInvestment>();

@@ -2,7 +2,7 @@ package dao;
 
 import java.util.List;
 import java.util.ArrayList;
-import model.Accounts.CheckingAccount;
+import model.accounts.CheckingAccount;
 
 public class CheckingAccountDao {
     private static List<CheckingAccount> checkingAccounts = new ArrayList<CheckingAccount>();
