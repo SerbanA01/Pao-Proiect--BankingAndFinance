@@ -8,6 +8,8 @@ public class RealEstateInvestment extends Investment{
         private String propertyType;
         private String annualYield;
 
+        public RealEstateInvestment() {
+        }
         public RealEstateInvestment(String investmentId, String investmentName, double investmentValue, double surface, double pricePerSquareMeter, String address, String propertyType, String annualYield) {
             super(investmentId, investmentName, investmentValue);
             this.surface = surface;

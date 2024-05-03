@@ -6,6 +6,8 @@ public class StockInvestment extends Investment {
     private double stockPrice;
     private String stockSymbol;
 
+    public StockInvestment() {
+    }
     public StockInvestment(String investmentId, String investmentName, double investmentValue, int numberOfStocks, double stockPrice, String stockSymbol) {
         super(investmentId, investmentName, investmentValue);
         this.numberOfStocks = numberOfStocks;

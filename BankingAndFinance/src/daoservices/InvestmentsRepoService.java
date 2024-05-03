@@ -1,78 +1,90 @@
 package daoservices;
 
 import model.investments.Investment;
-import model.investments.RealEstateInvestment;
-import model.investments.StockInvestment;
-import dao.RealEstateInvestmentDao;
 import dao.StockInvestmentDao;
+import dao.RealEstateInvestmentDao;
+import model.investments.StockInvestment;
+import model.investments.RealEstateInvestment;
+import java.sql.SQLException;
+
+
 
 public class InvestmentsRepoService {
 
-    private RealEstateInvestmentDao realEstateInvestmentDao;
-    private StockInvestmentDao stockInvestmentDao;
+    private StockInvestmentDao stockInvestmentDao = StockInvestmentDao.getInstance();
+    private RealEstateInvestmentDao realEstateInvestmentDao = RealEstateInvestmentDao.getInstance();
 
-    public InvestmentsRepoService() {
-        this.realEstateInvestmentDao = new RealEstateInvestmentDao();
-        this.stockInvestmentDao = new StockInvestmentDao();
-    }
+    public InvestmentsRepoService() throws SQLException {}
 
-    public RealEstateInvestment getRealEstateInvestmentById(String id) {
-        RealEstateInvestment realEstateInvestment = realEstateInvestmentDao.read(id);
-        if(realEstateInvestment == null) {
-            System.out.println("Real Estate Investment not found");
-            return null;
+    public RealEstateInvestment getRealEstateInvestmentById(String investmentId) throws SQLException {
+        RealEstateInvestment realEstateInvestment = realEstateInvestmentDao.read(investmentId);
+        if(realEstateInvestment != null){
+            System.out.println(realEstateInvestment);
+        }else {
+            System.out.println("No real estate investment found with this ID");
         }
-        System.out.println("Real Estate Investment found: " + realEstateInvestment.getInvestmentId() + " " + realEstateInvestment.getInvestmentName());
+
         return realEstateInvestment;
     }
 
-    public StockInvestment getStockInvestmentById(String id) {
-        StockInvestment stockInvestment = stockInvestmentDao.read(id);
-        if(stockInvestment == null) {
-            System.out.println("Stock Investment not found");
-            return null;
+    public StockInvestment getStockInvestmentById(String investmentId) throws SQLException {
+        StockInvestment stockInvestment = stockInvestmentDao.read(investmentId);
+        if(stockInvestment != null){
+            System.out.println(stockInvestment);
+        }else {
+            System.out.println("No stock investment found with this ID");
         }
-        System.out.println("Stock Investment found: " + stockInvestment.getInvestmentId() + " " + stockInvestment.getInvestmentName());
         return stockInvestment;
     }
 
-    public void removeInvestment(String investmentType, String id) {
+    public void removeInvestment(String typeOfInvestment, String investmentId) throws SQLException {
+        Investment investment = getInvestment(typeOfInvestment, investmentId);
+        if (investment == null) return;
 
-        Investment investment = getInvestment(investmentType, id);
-        if(investment == null) {
-            System.out.println("Investment not found");
-            return;
-        }
-
-        switch (investment) {
+        switch (investment){
             case RealEstateInvestment realEstateInvestment -> realEstateInvestmentDao.delete(realEstateInvestment);
             case StockInvestment stockInvestment -> stockInvestmentDao.delete(stockInvestment);
             default -> throw new IllegalStateException("Unexpected value: " + investment);
         }
+
+        System.out.println("Removed " + investment);
     }
 
-    public Investment getInvestment(String investmentType, String id) {
-        Investment investment = null;
-        switch (investmentType) {
-            case "realestate" -> investment = getRealEstateInvestmentById(id);
-            case "stock" -> investment = getStockInvestmentById(id);
-            default -> System.out.println("Invalid investment type");
+    public void addInvestment(Investment investment) throws SQLException {
+        if(investment != null){
+            switch (investment){
+                case RealEstateInvestment realEstateInvestment -> realEstateInvestmentDao.add(realEstateInvestment);
+                case StockInvestment stockInvestment -> stockInvestmentDao.add(stockInvestment);
+                default -> throw new IllegalStateException("Unexpected value: " + investment);
+            }
         }
+    }
+
+    public Investment getInvestment(String typeOfInvestment, String investmentId) {
+        Investment investment = null;
+        try {
+            if(typeOfInvestment.equals("realEstate")){
+                investment = getRealEstateInvestmentById(investmentId);
+            }else{
+                investment = getStockInvestmentById(investmentId);
+            }
+            if(investment == null) {
+                return null;
+            }
+        } catch (SQLException e) {
+            System.out.println("SQLException " + e.getSQLState() + " " + e.getMessage());
+        }
+
         return investment;
     }
 
-    public void addInvestment(Investment investment) {
-        if(investment == null) {
-            System.out.println("Investment not found");
-            return;
+    public void updateInvestment(Investment investment) throws SQLException {
+        if(investment != null){
+            switch (investment){
+                case RealEstateInvestment realEstateInvestment -> realEstateInvestmentDao.update(realEstateInvestment);
+                case StockInvestment stockInvestment -> stockInvestmentDao.update(stockInvestment);
+                default -> throw new IllegalStateException("Unexpected value: " + investment);
+            }
         }
-        switch (investment) {
-            case RealEstateInvestment realEstateInvestment -> realEstateInvestmentDao.create(realEstateInvestment);
-            case StockInvestment stockInvestment -> stockInvestmentDao.create(stockInvestment);
-            default -> throw new IllegalStateException("Unexpected value: " + investment);
-        }
-        System.out.println("Added " + investment.getInvestmentId() + " " + investment.getInvestmentName() + " to the database");
     }
-
-
 }

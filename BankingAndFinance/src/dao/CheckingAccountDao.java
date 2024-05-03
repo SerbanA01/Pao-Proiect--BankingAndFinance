@@ -1,25 +1,84 @@
 package dao;
 
+import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
+
+import daoservices.DatabaseConnection;
 import model.accounts.CheckingAccount;
 
-public class CheckingAccountDao {
-    private static List<CheckingAccount> checkingAccounts = new ArrayList<CheckingAccount>();
-    public void create(CheckingAccount checkingAccount) {
-        checkingAccounts.add(checkingAccount);
+public class CheckingAccountDao implements DaoInterface<CheckingAccount> {
+
+    private static CheckingAccountDao checkingAccountDao;
+
+    private Connection connection = DatabaseConnection.getConnection();
+
+    public CheckingAccountDao() throws SQLException {
     }
-    public void delete(CheckingAccount checkingAccount) {
-        checkingAccounts.remove(checkingAccount);
+
+    public static CheckingAccountDao getInstance() throws SQLException {
+        if (checkingAccountDao == null) {
+            checkingAccountDao = new CheckingAccountDao();
+        }
+        return checkingAccountDao;
     }
-    public CheckingAccount read(String accountNumber) {
-        if (!checkingAccounts.isEmpty()) {
-            for (CheckingAccount c : checkingAccounts) {
-                if (c.getAccountNumber().equals(accountNumber)) {
-                    return c;
-                }
+
+    @Override
+    public void add(CheckingAccount checkingAccount) throws SQLException {
+        String sql = "INSERT INTO proiectpao.checkingaccount VALUES (?, ?, ?, ?, ?, ?);";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);) {
+            statement.setString(1, checkingAccount.getAccountNumber());
+            statement.setString(2, checkingAccount.getAccountHolder());
+            statement.setDouble(3, checkingAccount.getBalance());
+            statement.setDouble(4, checkingAccount.getOverdraftLimit());
+            statement.setDouble(5, checkingAccount.getTransactionFee());
+            statement.setString(6, checkingAccount.getDebitCardNumber());
+            statement.executeUpdate();
+        }
+    }
+
+    @Override
+    public CheckingAccount read(String accountNumber) throws SQLException {
+        String sql = "SELECT * FROM proiectpao.checkingaccount s WHERE s.accountNumber = ?";
+        ResultSet rs = null;
+        try (PreparedStatement statement = connection.prepareStatement(sql);) {
+            statement.setString(1, accountNumber);
+            rs = statement.executeQuery();
+
+            while (rs.next()) {
+                CheckingAccount checkingAccount = new CheckingAccount(rs.getString("accountNumber"), rs.getString("accountHolder"), rs.getDouble("balance"), rs.getDouble("overdraftLimit"), rs.getDouble("transactionFee"), rs.getString("debitCardNumber"));
+                return checkingAccount;
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
             }
         }
         return null;
+    }
+
+    @Override
+    public void delete(CheckingAccount checkingAccount) throws SQLException {
+        String sql = "DELETE FROM proiectpao.checkingaccount WHERE accountNumber = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);) {
+            statement.setString(1, checkingAccount.getAccountNumber());
+            statement.executeUpdate();
+        }
+    }
+
+    @Override
+    public void update(CheckingAccount checkingAccount) throws SQLException {
+        String sql = "UPDATE proiectpao.checkingaccount SET balance = ?, overdraftLimit = ?, transactionFee = ?, debitCardNumber = ? WHERE accountNumber = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);) {
+            statement.setDouble(1, checkingAccount.getBalance());
+            statement.setDouble(2, checkingAccount.getOverdraftLimit());
+            statement.setDouble(3, checkingAccount.getTransactionFee());
+            statement.setString(4, checkingAccount.getDebitCardNumber());
+            statement.setString(5, checkingAccount.getAccountNumber());
+            statement.executeUpdate();
+        }
     }
 }

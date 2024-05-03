@@ -5,6 +5,8 @@ public class CheckingAccount extends Account  {
     private double transactionFee;
     private String debitCardNumber;
 
+    public CheckingAccount() {
+    }
     public CheckingAccount(String accountNumber, String accountHolder, double balance, double overdraftLimit, double transactionFee, String debitCardNumber) {
         super(accountNumber, accountHolder, balance);
         this.overdraftLimit = overdraftLimit;

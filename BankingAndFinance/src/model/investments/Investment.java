@@ -6,6 +6,9 @@ public class Investment {
     private String investmentName;
     private double investmentValue;
 
+
+    public Investment() {
+    }
     public Investment(String investmentId, String investmentName, double investmentValue) {
         this.investmentId = investmentId;
         this.investmentName = investmentName;

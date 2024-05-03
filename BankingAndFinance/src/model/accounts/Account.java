@@ -6,6 +6,8 @@ public class Account {
     protected String accountHolder;
     protected double balance;
 
+    public Account() {
+    }
     public Account(String accountNumber, String accountHolder, double balance) {
         this.accountNumber = accountNumber;
         this.accountHolder = accountHolder;

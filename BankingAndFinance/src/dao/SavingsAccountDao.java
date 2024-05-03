@@ -1,25 +1,85 @@
 package dao;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.sql.*;
 import model.accounts.SavingsAccount;
+import daoservices.DatabaseConnection;
 
-public class SavingsAccountDao {
-    private static List<SavingsAccount> savingsAccounts = new ArrayList<SavingsAccount>();
-    public void create(SavingsAccount savingsAccount) {
-        savingsAccounts.add(savingsAccount);
+public class SavingsAccountDao implements DaoInterface<SavingsAccount> {
+    private static SavingsAccountDao savingsAccountDao;
+    private Connection connection = DatabaseConnection.getConnection();
+
+    private SavingsAccountDao() throws SQLException {}
+
+    public static SavingsAccountDao getInstance() throws SQLException {
+        if (savingsAccountDao == null) {
+            savingsAccountDao = new SavingsAccountDao();
+        }
+        return savingsAccountDao;
     }
-    public void delete(SavingsAccount savingsAccount) {
-        savingsAccounts.remove(savingsAccount);
+
+    @Override
+    public void add(SavingsAccount savingsAccount) throws SQLException {
+        String sql = "INSERT INTO proiectpao.savingsaccount (accountNumber, accountHolder, balance, interestRate, minimumBalance, penalty) VALUES (?, ?, ?, ?, ?, ?);";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, savingsAccount.getAccountNumber());
+            statement.setString(2, savingsAccount.getAccountHolder());
+            statement.setDouble(3, savingsAccount.getBalance());
+            statement.setDouble(4, savingsAccount.getInterestRate());
+            statement.setDouble(5, savingsAccount.getMinimumBalance());
+            statement.setDouble(6, savingsAccount.getPenalty());
+            statement.executeUpdate();
+        }
     }
-    public SavingsAccount read(String accountNumber) {
-        if (!savingsAccounts.isEmpty()) {
-            for (SavingsAccount s : savingsAccounts) {
-                if (s.getAccountNumber().equals(accountNumber)) {
-                    return s;
-                }
+
+    @Override
+    public SavingsAccount read(String accountNumber) throws SQLException {
+        String sql = "SELECT * FROM proiectpao.savingsaccount s WHERE s.accountNumber = ?";
+        ResultSet rs = null;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, accountNumber);
+            rs = statement.executeQuery();
+
+            while (rs.next()) {
+                SavingsAccount savingsAccount = new SavingsAccount();
+                savingsAccount.setAccountNumber(rs.getString("accountNumber"));
+                savingsAccount.setAccountHolder(rs.getString("accountHolder"));
+                savingsAccount.setBalance(rs.getDouble("balance"));
+                savingsAccount.setInterestRate(rs.getDouble("interestRate"));
+                savingsAccount.setMinimumBalance(rs.getDouble("minimumBalance"));
+                savingsAccount.setPenalty(rs.getDouble("penalty"));
+                return savingsAccount;
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
             }
         }
         return null;
+    }
+
+    @Override
+    public void delete(SavingsAccount savingsAccount) throws SQLException {
+        String sql = "DELETE FROM proiectpao.savingsaccount WHERE accountNumber = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, savingsAccount.getAccountNumber());
+            statement.executeUpdate();
+        }
+    }
+
+    @Override
+    public void update(SavingsAccount savingsAccount) throws SQLException {
+        String sql = "UPDATE proiectpao.savingsaccount SET accountHolder = ?, balance = ?, interestRate = ?, minimumBalance = ?, penalty = ? WHERE accountNumber = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, savingsAccount.getAccountHolder());
+            statement.setDouble(2, savingsAccount.getBalance());
+            statement.setDouble(3, savingsAccount.getInterestRate());
+            statement.setDouble(4, savingsAccount.getMinimumBalance());
+            statement.setDouble(5, savingsAccount.getPenalty());
+            statement.setString(6, savingsAccount.getAccountNumber());
+            statement.executeUpdate();
+        }
     }
 }
