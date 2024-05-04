@@ -19,22 +19,27 @@ public class StockInvestmentDao implements DaoInterface<StockInvestment> {
 
     @Override
     public void add(StockInvestment stockInvestment) throws SQLException {
-        String sql = "INSERT INTO proiectpao.stockinvestment (investmentId, investmentName, investmentValue, numberOfStocks, stockPrice, stockSymbol) VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO bankingdb.stockinvestments  VALUES (?, ?, ?, ?);";
+        String sql2 = "INSERT INTO bankingdb.investments  VALUES (?, ?, ?);";
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql2)) {
             statement.setString(1, stockInvestment.getInvestmentId());
             statement.setString(2, stockInvestment.getInvestmentName());
             statement.setDouble(3, stockInvestment.getInvestmentValue());
-            statement.setInt(4, stockInvestment.getNumberOfStocks());
-            statement.setDouble(5, stockInvestment.getStockPrice());
-            statement.setString(6, stockInvestment.getStockSymbol());
+            statement.executeUpdate();
+        }
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, stockInvestment.getInvestmentId());
+            statement.setInt(2, stockInvestment.getNumberOfStocks());
+            statement.setDouble(3, stockInvestment.getStockPrice());
+            statement.setString(4, stockInvestment.getStockSymbol());
             statement.executeUpdate();
         }
     }
 
     @Override
     public StockInvestment read(String investmentId) throws SQLException {
-        String sql = "SELECT * FROM proiectpao.stockinvestment s WHERE s.investmentId = ?";
+        String sql = "SELECT * FROM bankingdb.stockinvestment s WHERE s.investmentId = ?";
         ResultSet rs = null;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, investmentId);
@@ -60,7 +65,7 @@ public class StockInvestmentDao implements DaoInterface<StockInvestment> {
 
     @Override
     public void delete(StockInvestment stockInvestment) throws SQLException {
-        String sql = "DELETE FROM proiectpao.stockinvestment WHERE investmentId = ?";
+        String sql = "DELETE FROM bankingdb.stockinvestment WHERE investmentId = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, stockInvestment.getInvestmentId());
@@ -70,7 +75,7 @@ public class StockInvestmentDao implements DaoInterface<StockInvestment> {
 
     @Override
     public void update(StockInvestment stockInvestment) throws SQLException {
-        String sql = "UPDATE proiectpao.stockinvestment SET investmentName = ?, investmentValue = ?, numberOfStocks = ?, stockPrice = ?, stockSymbol = ? WHERE investmentId = ?";
+        String sql = "UPDATE bankingdb.stockinvestment SET investmentName = ?, investmentValue = ?, numberOfStocks = ?, stockPrice = ?, stockSymbol = ? WHERE investmentId = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, stockInvestment.getInvestmentName());

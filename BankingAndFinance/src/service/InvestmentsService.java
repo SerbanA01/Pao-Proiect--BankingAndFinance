@@ -5,12 +5,13 @@ import model.investments.Investment;
 import model.investments.RealEstateInvestment;
 import model.investments.StockInvestment;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class InvestmentsService {
     private InvestmentsRepoService dbservice;
 
-    public InvestmentsService() {
+    public InvestmentsService() throws SQLException {
         this.dbservice = new InvestmentsRepoService();
     }
 
@@ -20,18 +21,30 @@ public class InvestmentsService {
         System.out.println("Enter investment type [RealEstate/Stock]:");
         String investmentType = scanner.nextLine().toLowerCase();
         if(!investmentType.equals("realestate") && !investmentType.equals("stock") ) { return; }
-        investmentInit(scanner, investmentType);
-
-
+        try {
+            investmentInit(scanner, investmentType);
+        }
+        catch (SQLException e) {
+            System.out.println("Investment could not be created " + e.getSQLState() + " " + e.getMessage());
+        }
 
     }
 
     public void read(Scanner scanner) {
         System.out.println("Enter investment ID:");
         String id = scanner.nextLine();
+        try{
         dbservice.getStockInvestmentById(id);
-        dbservice.getRealEstateInvestmentById(id);
-
+        }
+        catch (SQLException e) {
+            System.out.println("Investment could not be read " + e.getSQLState() + " " + e.getMessage());
+        }
+        try {
+            dbservice.getRealEstateInvestmentById(id);
+        }
+        catch (SQLException e) {
+            System.out.println("Investment could not be read " + e.getSQLState() + " " + e.getMessage());
+        }
     }
 
     public void delete(Scanner scanner) {
@@ -41,8 +54,12 @@ public class InvestmentsService {
         String id = scanner.nextLine();
 
         if(!investmentType.equals("realestate") && !investmentType.equals("stock") ) { return; }
-        dbservice.removeInvestment(investmentType, id);
-
+        try {
+            dbservice.removeInvestment(investmentType, id);
+        }
+        catch (SQLException e) {
+            System.out.println("Investment could not be deleted " + e.getSQLState() + " " + e.getMessage());
+        }
 
     }
 
@@ -60,6 +77,8 @@ public class InvestmentsService {
 
         Investment investment = dbservice.getInvestment(investmentType, id);
         if(investment == null) { return; }
+
+
         investment.setInvestmentName(investmentName);
         investment.setInvestmentValue(investmentValue);
         if(investmentType.equals("realestate")) {
@@ -68,6 +87,12 @@ public class InvestmentsService {
             stockInit(scanner, (StockInvestment) investment);
         }
 
+        try {
+            dbservice.updateInvestment(investment);
+        }
+        catch (SQLException e) {
+            System.out.println("Investment could not be updated " + e.getSQLState() + " " + e.getMessage());
+        }
 
     }
 
@@ -77,7 +102,7 @@ public class InvestmentsService {
     private double investmentValue;
     *
     * */
-    private void investmentInit(Scanner scanner, String investmentType) {
+    private void investmentInit(Scanner scanner, String investmentType) throws SQLException {
 
         long investmentId = (long) (Math.random() * 10000000000000000L);
         String investmentIdString = String.valueOf(investmentId);
@@ -100,9 +125,13 @@ public class InvestmentsService {
 
         }
 
-        dbservice.addInvestment(investment);
-        System.out.println("Investment added successfully! Investment ID: " + investmentIdString + " Investment Name: " + investmentName + " Investment Value: " + investmentValue + " Investment Type: " + investmentType );
-
+        try {
+            dbservice.addInvestment(investment);
+            System.out.println("Investment added successfully! Investment ID: " + investmentIdString + " Investment Name: " + investmentName + " Investment Value: " + investmentValue + " Investment Type: " + investmentType);
+        }
+        catch (SQLException e) {
+            System.out.println("Investment could not be added " + e.getSQLState() + " " + e.getMessage());
+        }
 
     }
 

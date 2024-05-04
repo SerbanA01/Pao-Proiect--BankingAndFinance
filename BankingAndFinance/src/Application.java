@@ -1,10 +1,11 @@
 import service.AccountsService;
 import service.InvestmentsService;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Application {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         //aici vom avea meniul de comenzi
 
         Scanner scanner = new Scanner(System.in);

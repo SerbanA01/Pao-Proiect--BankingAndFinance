@@ -9,6 +9,7 @@ import java.sql.SQLException;
 public class DatabaseConnection {
     private static Connection connection = null;
 
+
     public static final String JDBC_DRIVER = "jdbc:mysql://localhost:3306/bankingdb";
     public static final String JDBC_PWD = "Martysrbn80@";
     public static final String JDBC_USER = "root";

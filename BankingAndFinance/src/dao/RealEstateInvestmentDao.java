@@ -19,24 +19,30 @@ public class RealEstateInvestmentDao implements DaoInterface<RealEstateInvestmen
 
     @Override
     public void add(RealEstateInvestment realEstateInvestment) throws SQLException {
-        String sql = "INSERT INTO proiectpao.realestateinvestment (investmentId, investmentName, investmentValue, surface, pricePerSquareMeter, address, propertyType, annualYield) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO bankingdb.realestateinvestments  VALUES (?, ?, ?, ?, ?, ?);";
+        String sql2 = "INSERT INTO bankingdb.investments  VALUES (?, ?, ?);";
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql2)) {
             statement.setString(1, realEstateInvestment.getInvestmentId());
             statement.setString(2, realEstateInvestment.getInvestmentName());
             statement.setDouble(3, realEstateInvestment.getInvestmentValue());
-            statement.setDouble(4, realEstateInvestment.getSurface());
-            statement.setDouble(5, realEstateInvestment.getPricePerSquareMeter());
-            statement.setString(6, realEstateInvestment.getAddress());
-            statement.setString(7, realEstateInvestment.getPropertyType());
-            statement.setString(8, realEstateInvestment.getAnnualYield());
+            statement.executeUpdate();
+        }
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, realEstateInvestment.getInvestmentId());
+            statement.setDouble(2, realEstateInvestment.getSurface());
+            statement.setDouble(3, realEstateInvestment.getPricePerSquareMeter());
+            statement.setString(4, realEstateInvestment.getAddress());
+            statement.setString(5, realEstateInvestment.getPropertyType());
+            statement.setString(6, realEstateInvestment.getAnnualYield());
             statement.executeUpdate();
         }
     }
 
     @Override
     public RealEstateInvestment read(String investmentId) throws SQLException {
-        String sql = "SELECT * FROM proiectpao.realestateinvestment s WHERE s.investmentId = ?";
+        String sql = "SELECT * FROM bankingdb.realestateinvestment s WHERE s.investmentId = ?";
         ResultSet rs = null;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, investmentId);
@@ -64,7 +70,7 @@ public class RealEstateInvestmentDao implements DaoInterface<RealEstateInvestmen
 
     @Override
     public void delete(RealEstateInvestment realEstateInvestment) throws SQLException {
-        String sql = "DELETE FROM proiectpao.realestateinvestment WHERE investmentId = ?";
+        String sql = "DELETE FROM bankingdb.realestateinvestment WHERE investmentId = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, realEstateInvestment.getInvestmentId());
@@ -74,7 +80,7 @@ public class RealEstateInvestmentDao implements DaoInterface<RealEstateInvestmen
 
     @Override
     public void update(RealEstateInvestment realEstateInvestment) throws SQLException {
-        String sql = "UPDATE proiectpao.realestateinvestment SET investmentName = ?, investmentValue = ?, surface = ?, pricePerSquareMeter = ?, address = ?, propertyType = ?, annualYield = ? WHERE investmentId = ?";
+        String sql = "UPDATE bankingdb.realestateinvestment SET investmentName = ?, investmentValue = ?, surface = ?, pricePerSquareMeter = ?, address = ?, propertyType = ?, annualYield = ? WHERE investmentId = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, realEstateInvestment.getInvestmentName());

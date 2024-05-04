@@ -19,22 +19,28 @@ public class SavingsAccountDao implements DaoInterface<SavingsAccount> {
 
     @Override
     public void add(SavingsAccount savingsAccount) throws SQLException {
-        String sql = "INSERT INTO proiectpao.savingsaccount (accountNumber, accountHolder, balance, interestRate, minimumBalance, penalty) VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO bankingdb.savingsaccounts  VALUES (?, ?, ?, ?);";
+        String sql2 = "INSERT INTO bankingdb.accounts  VALUES (?, ?, ?);";
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql2)) {
             statement.setString(1, savingsAccount.getAccountNumber());
             statement.setString(2, savingsAccount.getAccountHolder());
             statement.setDouble(3, savingsAccount.getBalance());
-            statement.setDouble(4, savingsAccount.getInterestRate());
-            statement.setDouble(5, savingsAccount.getMinimumBalance());
-            statement.setDouble(6, savingsAccount.getPenalty());
+            statement.executeUpdate();
+        }
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, savingsAccount.getAccountNumber());
+            statement.setDouble(2, savingsAccount.getInterestRate());
+            statement.setDouble(3, savingsAccount.getMinimumBalance());
+            statement.setDouble(4, savingsAccount.getPenalty());
             statement.executeUpdate();
         }
     }
 
     @Override
     public SavingsAccount read(String accountNumber) throws SQLException {
-        String sql = "SELECT * FROM proiectpao.savingsaccount s WHERE s.accountNumber = ?";
+        String sql = "SELECT * FROM bankingdb.savingsaccount s WHERE s.accountNumber = ?";
         ResultSet rs = null;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, accountNumber);
@@ -60,7 +66,7 @@ public class SavingsAccountDao implements DaoInterface<SavingsAccount> {
 
     @Override
     public void delete(SavingsAccount savingsAccount) throws SQLException {
-        String sql = "DELETE FROM proiectpao.savingsaccount WHERE accountNumber = ?";
+        String sql = "DELETE FROM bankingdb.savingsaccount WHERE accountNumber = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, savingsAccount.getAccountNumber());
@@ -70,7 +76,7 @@ public class SavingsAccountDao implements DaoInterface<SavingsAccount> {
 
     @Override
     public void update(SavingsAccount savingsAccount) throws SQLException {
-        String sql = "UPDATE proiectpao.savingsaccount SET accountHolder = ?, balance = ?, interestRate = ?, minimumBalance = ?, penalty = ? WHERE accountNumber = ?";
+        String sql = "UPDATE bankingdb.savingsaccount SET accountHolder = ?, balance = ?, interestRate = ?, minimumBalance = ?, penalty = ? WHERE accountNumber = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, savingsAccount.getAccountHolder());

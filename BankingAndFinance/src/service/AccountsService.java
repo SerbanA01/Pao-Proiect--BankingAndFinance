@@ -5,44 +5,68 @@ import model.accounts.Account;
 import model.accounts.CheckingAccount;
 import model.accounts.SavingsAccount;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class AccountsService {
     private AccountsRepoService dbService;
 
-    public AccountsService() {
+    public AccountsService() throws SQLException {
         this.dbService = new AccountsRepoService();
     }
 
-    public void create(Scanner scanner){
+    public void create(Scanner scanner) {
         System.out.println("Enter the account type [savings/checking]:");
         String accountType = scanner.nextLine().toLowerCase();
-        if(!accountType.equals("savings") && !accountType.equals("checking") ) { return; }
-        accountInit(scanner, accountType);
+        if (!accountType.equals("savings") && !accountType.equals("checking")) {
+            return;
+        }
+        try {
+            accountInit(scanner, accountType);
+        } catch (SQLException e) {
+            System.out.println("Account cannot be created " + e.getSQLState() + " " + e.getMessage());
+        }
     }
 
-    public void read(Scanner scanner){
+    public void read(Scanner scanner) {
         System.out.println("Enter the account number:");
         String accountNumber = scanner.nextLine();
-        dbService.getCheckingAccount(accountNumber);
-        dbService.getSavingsAccount(accountNumber);
+        try {
+            dbService.getCheckingAccountByNumber(accountNumber);
+        } catch (SQLException e) {
+            System.out.println("Account cannot be found " + e.getSQLState() + " " + e.getMessage());
+        }
+        try {
+            dbService.getSavingsAccountByNumber(accountNumber);
+        } catch (SQLException e) {
+            System.out.println("Account cannot be found " + e.getSQLState() + " " + e.getMessage());
+
+        }
 
     }
 
-    public void delete(Scanner scanner){
+    public void delete(Scanner scanner) {
         System.out.println("Enter the account number:");
         String accountNumber = scanner.nextLine();
         System.out.println("Enter the account type [savings/checking]:");
         String accountType = scanner.nextLine().toLowerCase();
-        if(!accountType.equals("savings") && !accountType.equals("checking") ) { return; }
+        if (!accountType.equals("savings") && !accountType.equals("checking")) {
+            return;
+        }
 
-        dbService.removeAccount(accountType, accountNumber);
+        try {
+            dbService.removeAccount(accountType, accountNumber);
+        } catch (SQLException e) {
+            System.out.println("Account cannot be deleted " + e.getSQLState() + " " + e.getMessage());
+        }
     }
 
-    public void update(Scanner scanner){
+    public void update(Scanner scanner) {
         System.out.println("typeOfAccount:");
         String typeOfAccount = scanner.nextLine();
-        if(!typeOfAccount.equals("savings") && !typeOfAccount.equals("checking") ) { return; }
+        if (!typeOfAccount.equals("savings") && !typeOfAccount.equals("checking")) {
+            return;
+        }
         System.out.println("Enter the account number:");
         String accountNumber = scanner.nextLine();
 
@@ -53,23 +77,28 @@ public class AccountsService {
         scanner.nextLine();
 
         Account account = dbService.getAccount(typeOfAccount, accountNumber);
-        if(account == null) { return; }
+        if (account == null) {
+            return;
+        }
         account.setAccountHolder(name);
         account.setBalance(balance);
         account.setAccountNumber(accountNumber);
-        if(typeOfAccount.equals("checking")){
+        if (typeOfAccount.equals("checking")) {
             checkingAccountInit(scanner, (CheckingAccount) account);
         }
-        if(typeOfAccount.equals("savings")){
+        if (typeOfAccount.equals("savings")) {
             savingAccountInit(scanner, (SavingsAccount) account);
-            System.out.println("Account updated successfully! Welcome " + name + " with account number: " + accountNumber);
         }
+        System.out.println("Account updated successfully! Welcome " + name + " with account number: " + accountNumber);
+        try {
+            dbService.updateAccount(account);
+        } catch (SQLException e) {
+            System.out.println("Account cannot be updated " + e.getSQLState() + " " + e.getMessage());
 
-
+        }
     }
 
-
-    private void accountInit(Scanner scanner, String accountType){
+    private void accountInit(Scanner scanner, String accountType) throws SQLException {
         System.out.println("Enter the account holder name:");
         String name = scanner.nextLine();
         double balance = 0;
@@ -77,21 +106,25 @@ public class AccountsService {
         long accountNumber = (long) (Math.random() * 10000000000000000L);
         String accountNumberString = String.valueOf(accountNumber);
 
+
         Account account = new Account(accountNumberString, name, balance);
-        if(accountType.equals("checking")){
+        if (accountType.equals("checking")) {
             CheckingAccount checkingAccount = new CheckingAccount(account);
             checkingAccountInit(scanner, checkingAccount);
             account = checkingAccount;
         }
-        if(accountType.equals("savings")){
+        if (accountType.equals("savings")) {
             SavingsAccount savingsAccount = new SavingsAccount(account);
             savingAccountInit(scanner, savingsAccount);
             account = savingsAccount;
         }
 
-        dbService.addAccount(account);
-        System.out.println("Account created successfully! Welcome " + name + " with account number: " + accountNumberString);
-
+        try {
+            dbService.addAccount(account);
+            System.out.println("Account created successfully! Welcome " + name + " with account number: " + accountNumberString);
+        } catch (SQLException e) {
+            System.out.println("Account cannot be created " + e.getSQLState() + " " + e.getMessage());
+        }
     }
 
     /*
@@ -99,7 +132,7 @@ public class AccountsService {
     private double transactionFee;
     private String debitCardNumber;
     * */
-    private void checkingAccountInit(Scanner scanner, CheckingAccount account){
+    private void checkingAccountInit(Scanner scanner, CheckingAccount account) {
         System.out.println("Enter the overdraft limit:");
         double overdraftLimit = scanner.nextDouble();
         scanner.nextLine();
@@ -122,7 +155,7 @@ public class AccountsService {
     private double minimumBalance;
     private double penalty;
     * */
-    private void savingAccountInit(Scanner scanner, SavingsAccount account){
+    private void savingAccountInit(Scanner scanner, SavingsAccount account) {
 
         System.out.println("Enter the interest rate:");
         double interestRate = scanner.nextDouble();
@@ -139,3 +172,4 @@ public class AccountsService {
         account.setPenalty(penalty);
     }
 }
+
