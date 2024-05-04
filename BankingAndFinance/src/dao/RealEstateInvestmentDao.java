@@ -44,6 +44,25 @@ public class RealEstateInvestmentDao implements DaoInterface<RealEstateInvestmen
     public RealEstateInvestment read(String investmentId) throws SQLException {
         String sql = "SELECT * FROM bankingdb.realestateinvestment s WHERE s.investmentId = ?";
         ResultSet rs = null;
+        String sql2 = "SELECT * FROM bankingdb.investments s WHERE s.investmentId = ?";
+        ResultSet rs2 = null;
+        String investmentName = null;
+        double investmentValue = 0;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql2)) {
+            statement.setString(1, investmentId);
+            rs2 = statement.executeQuery();
+
+            while (rs2.next()) {
+                investmentName = rs2.getString("investmentName");
+                investmentValue = rs2.getDouble("investmentValue");
+            }
+        } finally {
+            if (rs2 != null) {
+                rs2.close();
+            }
+        }
+
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, investmentId);
             rs = statement.executeQuery();
@@ -51,9 +70,9 @@ public class RealEstateInvestmentDao implements DaoInterface<RealEstateInvestmen
             while (rs.next()) {
                 RealEstateInvestment realEstateInvestment = new RealEstateInvestment();
                 realEstateInvestment.setInvestmentId(rs.getString("investmentId"));
-                realEstateInvestment.setInvestmentName(rs.getString("investmentName"));
-                realEstateInvestment.setInvestmentValue(rs.getDouble("investmentValue"));
                 realEstateInvestment.setSurface(rs.getDouble("surface"));
+                realEstateInvestment.setInvestmentName(investmentName);
+                realEstateInvestment.setInvestmentValue(investmentValue);
                 realEstateInvestment.setPricePerSquareMeter(rs.getDouble("pricePerSquareMeter"));
                 realEstateInvestment.setAddress(rs.getString("address"));
                 realEstateInvestment.setPropertyType(rs.getString("propertyType"));
@@ -71,8 +90,14 @@ public class RealEstateInvestmentDao implements DaoInterface<RealEstateInvestmen
     @Override
     public void delete(RealEstateInvestment realEstateInvestment) throws SQLException {
         String sql = "DELETE FROM bankingdb.realestateinvestment WHERE investmentId = ?";
+        String sql2 = "DELETE FROM bankingdb.investments WHERE investmentId = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, realEstateInvestment.getInvestmentId());
+            statement.executeUpdate();
+        }
+
+        try (PreparedStatement statement = connection.prepareStatement(sql2)) {
             statement.setString(1, realEstateInvestment.getInvestmentId());
             statement.executeUpdate();
         }
@@ -80,17 +105,24 @@ public class RealEstateInvestmentDao implements DaoInterface<RealEstateInvestmen
 
     @Override
     public void update(RealEstateInvestment realEstateInvestment) throws SQLException {
-        String sql = "UPDATE bankingdb.realestateinvestment SET investmentName = ?, investmentValue = ?, surface = ?, pricePerSquareMeter = ?, address = ?, propertyType = ?, annualYield = ? WHERE investmentId = ?";
+        String sql = "UPDATE bankingdb.realestateinvestment SET  surface = ?, pricePerSquareMeter = ?, address = ?, propertyType = ?, annualYield = ? WHERE investmentId = ?";
+        String sql2 = "UPDATE bankingdb.investments SET investmentName = ?, investmentValue = ? WHERE investmentId = ?";
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql2)) {
             statement.setString(1, realEstateInvestment.getInvestmentName());
             statement.setDouble(2, realEstateInvestment.getInvestmentValue());
-            statement.setDouble(3, realEstateInvestment.getSurface());
-            statement.setDouble(4, realEstateInvestment.getPricePerSquareMeter());
-            statement.setString(5, realEstateInvestment.getAddress());
-            statement.setString(6, realEstateInvestment.getPropertyType());
-            statement.setString(7, realEstateInvestment.getAnnualYield());
-            statement.setString(8, realEstateInvestment.getInvestmentId());
+            statement.setString(3, realEstateInvestment.getInvestmentId());
+            statement.executeUpdate();
+        }
+        //in update remember that when you change them you put null in them because the function only receives
+        //a reastateinvestment object not an investment object
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDouble(1, realEstateInvestment.getSurface());
+            statement.setDouble(2, realEstateInvestment.getPricePerSquareMeter());
+            statement.setString(3, realEstateInvestment.getAddress());
+            statement.setString(4, realEstateInvestment.getPropertyType());
+            statement.setString(5, realEstateInvestment.getAnnualYield());
+            statement.setString(6, realEstateInvestment.getInvestmentId());
             statement.executeUpdate();
         }
     }

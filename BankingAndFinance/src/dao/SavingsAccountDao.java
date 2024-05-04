@@ -40,8 +40,27 @@ public class SavingsAccountDao implements DaoInterface<SavingsAccount> {
 
     @Override
     public SavingsAccount read(String accountNumber) throws SQLException {
-        String sql = "SELECT * FROM bankingdb.savingsaccount s WHERE s.accountNumber = ?";
+        String sql = "SELECT * FROM bankingdb.savingsaccounts s WHERE s.accountNumber = ?";
         ResultSet rs = null;
+        String sql2 = "SELECT * FROM bankingdb.accounts s WHERE s.accountNumber = ?";
+        ResultSet rs2 = null;
+        String accountHolder = null;
+        double balance = 0;
+        try (PreparedStatement statement = connection.prepareStatement(sql2)) {
+            statement.setString(1, accountNumber);
+            rs2 = statement.executeQuery();
+
+            while (rs2.next()) {
+                accountHolder = rs2.getString("accountHolder");
+                balance = rs2.getDouble("balance");
+            }
+        } finally {
+            if (rs2 != null) {
+                rs2.close();
+            }
+        }
+
+
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, accountNumber);
             rs = statement.executeQuery();
@@ -49,8 +68,8 @@ public class SavingsAccountDao implements DaoInterface<SavingsAccount> {
             while (rs.next()) {
                 SavingsAccount savingsAccount = new SavingsAccount();
                 savingsAccount.setAccountNumber(rs.getString("accountNumber"));
-                savingsAccount.setAccountHolder(rs.getString("accountHolder"));
-                savingsAccount.setBalance(rs.getDouble("balance"));
+                savingsAccount.setAccountHolder(accountHolder);
+                savingsAccount.setBalance(balance);
                 savingsAccount.setInterestRate(rs.getDouble("interestRate"));
                 savingsAccount.setMinimumBalance(rs.getDouble("minimumBalance"));
                 savingsAccount.setPenalty(rs.getDouble("penalty"));
@@ -66,9 +85,13 @@ public class SavingsAccountDao implements DaoInterface<SavingsAccount> {
 
     @Override
     public void delete(SavingsAccount savingsAccount) throws SQLException {
-        String sql = "DELETE FROM bankingdb.savingsaccount WHERE accountNumber = ?";
-
+        String sql = "DELETE FROM bankingdb.savingsaccounts WHERE accountNumber = ?";
+        String sql2 = "DELETE FROM bankingdb.accounts WHERE accountNumber = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, savingsAccount.getAccountNumber());
+            statement.executeUpdate();
+        }
+        try (PreparedStatement statement = connection.prepareStatement(sql2)) {
             statement.setString(1, savingsAccount.getAccountNumber());
             statement.executeUpdate();
         }
@@ -76,15 +99,22 @@ public class SavingsAccountDao implements DaoInterface<SavingsAccount> {
 
     @Override
     public void update(SavingsAccount savingsAccount) throws SQLException {
-        String sql = "UPDATE bankingdb.savingsaccount SET accountHolder = ?, balance = ?, interestRate = ?, minimumBalance = ?, penalty = ? WHERE accountNumber = ?";
+        String sql = "UPDATE bankingdb.savingsaccounts SET interestRate = ?, minimumBalance = ?, penalty = ? WHERE accountNumber = ?";
+        String sql2 = "UPDATE bankingdb.accounts SET accountHolder = ?, balance = ? WHERE accountNumber = ?";
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql2)) {
             statement.setString(1, savingsAccount.getAccountHolder());
             statement.setDouble(2, savingsAccount.getBalance());
-            statement.setDouble(3, savingsAccount.getInterestRate());
-            statement.setDouble(4, savingsAccount.getMinimumBalance());
-            statement.setDouble(5, savingsAccount.getPenalty());
-            statement.setString(6, savingsAccount.getAccountNumber());
+            statement.setString(3, savingsAccount.getAccountNumber());
+            //think about the fact whether you want to have a getter for the account number called here
+            statement.executeUpdate();
+        }
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDouble(1, savingsAccount.getInterestRate());
+            statement.setDouble(2, savingsAccount.getMinimumBalance());
+            statement.setDouble(3, savingsAccount.getPenalty());
+            //here aswell
+            statement.setString(4, savingsAccount.getAccountNumber());
             statement.executeUpdate();
         }
     }

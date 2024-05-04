@@ -39,8 +39,28 @@ public class StockInvestmentDao implements DaoInterface<StockInvestment> {
 
     @Override
     public StockInvestment read(String investmentId) throws SQLException {
-        String sql = "SELECT * FROM bankingdb.stockinvestment s WHERE s.investmentId = ?";
+        String sql = "SELECT * FROM bankingdb.stockinvestments s WHERE s.investmentId = ?";
+        String sql2 = "SELECT * FROM bankingdb.investments s WHERE s.investmentId = ?";
         ResultSet rs = null;
+        ResultSet rs2 = null;
+        String investmentName = null;
+        double investmentValue = 0;
+        try (PreparedStatement statement = connection.prepareStatement(sql2)) {
+            statement.setString(1, investmentId);
+            rs2 = statement.executeQuery();
+
+            while (rs2.next()) {
+                investmentName = rs2.getString("investmentName");
+                investmentValue = rs2.getDouble("investmentValue");
+            }
+        } finally {
+            if (rs2 != null) {
+                rs2.close();
+            }
+        }
+
+
+
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, investmentId);
             rs = statement.executeQuery();
@@ -48,8 +68,8 @@ public class StockInvestmentDao implements DaoInterface<StockInvestment> {
             while (rs.next()) {
                 StockInvestment stockInvestment = new StockInvestment();
                 stockInvestment.setInvestmentId(rs.getString("investmentId"));
-                stockInvestment.setInvestmentName(rs.getString("investmentName"));
-                stockInvestment.setInvestmentValue(rs.getDouble("investmentValue"));
+                stockInvestment.setInvestmentName(investmentName);
+                stockInvestment.setInvestmentValue(investmentValue);
                 stockInvestment.setNumberOfStocks(rs.getInt("numberOfStocks"));
                 stockInvestment.setStockPrice(rs.getDouble("stockPrice"));
                 stockInvestment.setStockSymbol(rs.getString("stockSymbol"));
@@ -65,9 +85,14 @@ public class StockInvestmentDao implements DaoInterface<StockInvestment> {
 
     @Override
     public void delete(StockInvestment stockInvestment) throws SQLException {
-        String sql = "DELETE FROM bankingdb.stockinvestment WHERE investmentId = ?";
+        String sql = "DELETE FROM bankingdb.stockinvestments WHERE investmentId = ?";
+        String sql2 = "DELETE FROM bankingdb.investments WHERE investmentId = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, stockInvestment.getInvestmentId());
+            statement.executeUpdate();
+        }
+        try (PreparedStatement statement = connection.prepareStatement(sql2)) {
             statement.setString(1, stockInvestment.getInvestmentId());
             statement.executeUpdate();
         }
@@ -75,15 +100,22 @@ public class StockInvestmentDao implements DaoInterface<StockInvestment> {
 
     @Override
     public void update(StockInvestment stockInvestment) throws SQLException {
-        String sql = "UPDATE bankingdb.stockinvestment SET investmentName = ?, investmentValue = ?, numberOfStocks = ?, stockPrice = ?, stockSymbol = ? WHERE investmentId = ?";
+        String sql = "UPDATE bankingdb.stockinvestments SET  numberOfStocks = ?, stockPrice = ?, stockSymbol = ? WHERE investmentId = ?";
+        String sql2 = "UPDATE bankingdb.investments SET investmentName = ?, investmentValue = ? WHERE investmentId = ?";
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        //they will be null if the function does not receive a value for them
+        try (PreparedStatement statement = connection.prepareStatement(sql2)) {
             statement.setString(1, stockInvestment.getInvestmentName());
             statement.setDouble(2, stockInvestment.getInvestmentValue());
-            statement.setInt(3, stockInvestment.getNumberOfStocks());
-            statement.setDouble(4, stockInvestment.getStockPrice());
-            statement.setString(5, stockInvestment.getStockSymbol());
-            statement.setString(6, stockInvestment.getInvestmentId());
+            statement.setString(3, stockInvestment.getInvestmentId());
+            statement.executeUpdate();
+        }
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, stockInvestment.getNumberOfStocks());
+            statement.setDouble(2, stockInvestment.getStockPrice());
+            statement.setString(3, stockInvestment.getStockSymbol());
+            statement.setString(4, stockInvestment.getInvestmentId());
             statement.executeUpdate();
         }
     }
