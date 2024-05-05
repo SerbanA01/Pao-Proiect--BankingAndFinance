@@ -4,6 +4,7 @@ import daoservices.AccountsRepoService;
 import model.accounts.Account;
 import model.accounts.CheckingAccount;
 import model.accounts.SavingsAccount;
+import others.AuditManagement;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -33,11 +34,13 @@ public class AccountsService {
         String accountNumber = scanner.nextLine();
         try {
             dbService.getCheckingAccountByNumber(accountNumber);
+            AuditManagement.writeToFile("Read checking account " + accountNumber);
         } catch (SQLException e) {
             System.out.println("Account cannot be found " + e.getSQLState() + " " + e.getMessage());
         }
         try {
             dbService.getSavingsAccountByNumber(accountNumber);
+            AuditManagement.writeToFile("Read savings account " + accountNumber);
         } catch (SQLException e) {
             System.out.println("Account cannot be found " + e.getSQLState() + " " + e.getMessage());
 
@@ -56,6 +59,7 @@ public class AccountsService {
 
         try {
             dbService.removeAccount(accountType, accountNumber);
+            AuditManagement.writeToFile("Deleted account " + accountType + " " + accountNumber);
         } catch (SQLException e) {
             System.out.println("Account cannot be deleted " + e.getSQLState() + " " + e.getMessage());
         }
@@ -92,6 +96,7 @@ public class AccountsService {
         System.out.println("Account updated successfully! Welcome " + name + " with account number: " + accountNumber);
         try {
             dbService.updateAccount(account);
+            AuditManagement.writeToFile("Updated account " + account);
         } catch (SQLException e) {
             System.out.println("Account cannot be updated " + e.getSQLState() + " " + e.getMessage());
 
@@ -106,8 +111,8 @@ public class AccountsService {
         long accountNumber = (long) (Math.random() * 10000000000000000L);
         String accountNumberString = String.valueOf(accountNumber);
 
-
         Account account = new Account(accountNumberString, name, balance);
+        AuditManagement.writeToFile("Created account " + account );
         if (accountType.equals("checking")) {
             CheckingAccount checkingAccount = new CheckingAccount(account);
             checkingAccountInit(scanner, checkingAccount);

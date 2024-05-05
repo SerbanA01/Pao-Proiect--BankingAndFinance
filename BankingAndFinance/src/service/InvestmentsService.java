@@ -4,6 +4,7 @@ import daoservices.InvestmentsRepoService;
 import model.investments.Investment;
 import model.investments.RealEstateInvestment;
 import model.investments.StockInvestment;
+import others.AuditManagement;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -35,12 +36,14 @@ public class InvestmentsService {
         String id = scanner.nextLine();
         try{
         dbservice.getStockInvestmentById(id);
+        AuditManagement.writeToFile("Read stock investment " + id);
         }
         catch (SQLException e) {
             System.out.println("Investment could not be read " + e.getSQLState() + " " + e.getMessage());
         }
         try {
             dbservice.getRealEstateInvestmentById(id);
+            AuditManagement.writeToFile("Read real estate investment " + id);
         }
         catch (SQLException e) {
             System.out.println("Investment could not be read " + e.getSQLState() + " " + e.getMessage());
@@ -56,6 +59,7 @@ public class InvestmentsService {
         if(!investmentType.equals("realestate") && !investmentType.equals("stock") ) { return; }
         try {
             dbservice.removeInvestment(investmentType, id);
+            AuditManagement.writeToFile("Deleted investment " + investmentType + " " + id);
         }
         catch (SQLException e) {
             System.out.println("Investment could not be deleted " + e.getSQLState() + " " + e.getMessage());
@@ -92,6 +96,7 @@ public class InvestmentsService {
 
         try {
             dbservice.updateInvestment(investment);
+            AuditManagement.writeToFile("Updated investment " + investment);
         }
         catch (SQLException e) {
             System.out.println("Investment could not be updated " + e.getSQLState() + " " + e.getMessage());
@@ -117,6 +122,8 @@ public class InvestmentsService {
 
 
         Investment investment = new Investment(investmentIdString, investmentName, investmentValue);
+        AuditManagement.writeToFile("Created investment" + investment);
+
         if(investmentType.equals("realestate")) {
               RealEstateInvestment realEstateInvestment = new RealEstateInvestment(investment);
               realEstateInit(scanner, realEstateInvestment);

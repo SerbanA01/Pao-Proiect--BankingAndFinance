@@ -5,6 +5,8 @@ import dao.CheckingAccountDao;
 import dao.SavingsAccountDao;
 import model.accounts.CheckingAccount;
 import model.accounts.SavingsAccount;
+import others.AuditManagement;
+
 import java.sql.SQLException;
 
 
@@ -45,7 +47,6 @@ public class AccountsRepoService {
             case SavingsAccount savingsAccount -> savingsAccountDao.delete(savingsAccount);
             default -> throw new IllegalStateException("Unexpected value: " + account);
         }
-
         System.out.println("Removed " + account);
     }
 
