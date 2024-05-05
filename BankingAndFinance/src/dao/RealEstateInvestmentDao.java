@@ -42,7 +42,7 @@ public class RealEstateInvestmentDao implements DaoInterface<RealEstateInvestmen
 
     @Override
     public RealEstateInvestment read(String investmentId) throws SQLException {
-        String sql = "SELECT * FROM bankingdb.realestateinvestment s WHERE s.investmentId = ?";
+        String sql = "SELECT * FROM bankingdb.realestateinvestments s WHERE s.investmentId = ?";
         ResultSet rs = null;
         String sql2 = "SELECT * FROM bankingdb.investments s WHERE s.investmentId = ?";
         ResultSet rs2 = null;
@@ -89,7 +89,7 @@ public class RealEstateInvestmentDao implements DaoInterface<RealEstateInvestmen
 
     @Override
     public void delete(RealEstateInvestment realEstateInvestment) throws SQLException {
-        String sql = "DELETE FROM bankingdb.realestateinvestment WHERE investmentId = ?";
+        String sql = "DELETE FROM bankingdb.realestateinvestments WHERE investmentId = ?";
         String sql2 = "DELETE FROM bankingdb.investments WHERE investmentId = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -105,7 +105,7 @@ public class RealEstateInvestmentDao implements DaoInterface<RealEstateInvestmen
 
     @Override
     public void update(RealEstateInvestment realEstateInvestment) throws SQLException {
-        String sql = "UPDATE bankingdb.realestateinvestment SET  surface = ?, pricePerSquareMeter = ?, address = ?, propertyType = ?, annualYield = ? WHERE investmentId = ?";
+        String sql = "UPDATE bankingdb.realestateinvestments SET  surface = ?, pricePerSquareMeter = ?, address = ?, propertyType = ?, annualYield = ? WHERE investmentId = ?";
         String sql2 = "UPDATE bankingdb.investments SET investmentName = ?, investmentValue = ? WHERE investmentId = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql2)) {

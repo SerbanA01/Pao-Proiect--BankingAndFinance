@@ -69,17 +69,17 @@ public class AccountsService {
         }
         System.out.println("Enter the account number:");
         String accountNumber = scanner.nextLine();
-
+        Account account = dbService.getAccount(typeOfAccount, accountNumber);
+        if (account == null) {
+            return;
+        }
         System.out.println("Enter the account holder name:");
         String name = scanner.nextLine();
         System.out.println("Enter the balance:");
         double balance = scanner.nextDouble();
         scanner.nextLine();
 
-        Account account = dbService.getAccount(typeOfAccount, accountNumber);
-        if (account == null) {
-            return;
-        }
+
         account.setAccountHolder(name);
         account.setBalance(balance);
         account.setAccountNumber(accountNumber);

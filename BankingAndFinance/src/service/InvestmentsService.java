@@ -69,14 +69,17 @@ public class InvestmentsService {
         if(!investmentType.equals("realestate") && !investmentType.equals("stock") ) { return; }
         System.out.println("Enter investment ID:");
         String id = scanner.nextLine();
+
+        Investment investment = dbservice.getInvestment(investmentType, id);
+        if(investment == null) { return; }
+
         System.out.println("Enter the new investment name:");
         String investmentName = scanner.nextLine();
         System.out.println("Enter the new investment value:");
         double investmentValue = scanner.nextDouble();
         scanner.nextLine();
 
-        Investment investment = dbservice.getInvestment(investmentType, id);
-        if(investment == null) { return; }
+
 
 
         investment.setInvestmentName(investmentName);

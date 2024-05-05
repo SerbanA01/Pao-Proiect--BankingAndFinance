@@ -46,8 +46,8 @@ public class CheckingAccountDao implements DaoInterface<CheckingAccount> {
 
     @Override
     public CheckingAccount read(String accountNumber) throws SQLException {
-        String sql = "SELECT * FROM bankingdb.checkingaccount s WHERE s.accountNumber = ?";
-        String sql2 = "SELECT * FROM bankingdb.account s WHERE s.accountNumber = ?";
+        String sql = "SELECT * FROM bankingdb.checkingaccounts s WHERE s.accountNumber = ?";
+        String sql2 = "SELECT * FROM bankingdb.accounts s WHERE s.accountNumber = ?";
         ResultSet rs = null;
         ResultSet rs2 = null;
         String accountHolder = null;
@@ -91,8 +91,8 @@ public class CheckingAccountDao implements DaoInterface<CheckingAccount> {
 
     @Override
     public void delete(CheckingAccount checkingAccount) throws SQLException {
-        String sql = "DELETE FROM bankingdb.checkingaccount WHERE accountNumber = ?";
-        String sql2 = "DELETE FROM bankingdb.account WHERE accountNumber = ?";
+        String sql = "DELETE FROM bankingdb.checkingaccounts WHERE accountNumber = ?";
+        String sql2 = "DELETE FROM bankingdb.accounts WHERE accountNumber = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql);) {
             statement.setString(1, checkingAccount.getAccountNumber());
@@ -107,8 +107,8 @@ public class CheckingAccountDao implements DaoInterface<CheckingAccount> {
 
     @Override
     public void update(CheckingAccount checkingAccount) throws SQLException {
-        String sql = "UPDATE bankingdb.checkingaccount SET balance = ?, overdraftLimit = ?, transactionFee = ?, debitCardNumber = ? WHERE accountNumber = ?";
-        String sql2 = "UPDATE bankingdb.account SET accountHolder = ?, balance = ? WHERE accountNumber = ?";
+        String sql = "UPDATE bankingdb.checkingaccounts SET balance = ?, overdraftLimit = ?, transactionFee = ?, debitCardNumber = ? WHERE accountNumber = ?";
+        String sql2 = "UPDATE bankingdb.accounts SET accountHolder = ?, balance = ? WHERE accountNumber = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql2);) {
             statement.setString(1, checkingAccount.getAccountHolder());
