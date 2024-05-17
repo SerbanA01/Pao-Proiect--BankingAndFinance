@@ -26,6 +26,13 @@ public class Account {
         return balance;
     }
 
+    public void deposit(double amount){
+        this.balance += amount;
+    }
+    public void withdraw(double amount){
+        this.balance -= amount;
+    }
+
     public void setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
     }

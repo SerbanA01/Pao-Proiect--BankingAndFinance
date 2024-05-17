@@ -1,5 +1,7 @@
+
 import service.AccountsService;
 import service.InvestmentsService;
+import service.TransactionService;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -9,8 +11,14 @@ public class Application {
         //aici vom avea meniul de comenzi
 
         Scanner scanner = new Scanner(System.in);
+        TransactionService transactionService = new TransactionService();
         AccountsService accountsService = new AccountsService();
+        transactionService.setAccountsService(accountsService);
+        accountsService.setTransactionService(transactionService);
         InvestmentsService investmentsService = new InvestmentsService();
+
+
+
 
         while (true) {
             menu();
@@ -23,6 +31,9 @@ public class Application {
                 case "delete":
                 case "update":
                     processCommand(command, accountsService, investmentsService, scanner);
+                    break;
+                case "access_account":
+                    processAccountCommand("access_account", accountsService, scanner);
                     break;
                 case "quit":
                     System.out.println("Exiting");
@@ -39,6 +50,7 @@ public class Application {
         System.out.println("Available commands:");
         System.out.println("create ");
         System.out.println("read ");
+        System.out.println("access_account");
         System.out.println("update ");
         System.out.println("delete ");
         System.out.println("quit");
@@ -57,6 +69,7 @@ public class Application {
         }
     }
 
+
     private static void processAccountCommand(String command, AccountsService accountsService, Scanner scanner) {
         switch (command) {
             case "create":
@@ -70,6 +83,9 @@ public class Application {
                 break;
             case "update":
                 accountsService.update(scanner);
+                break;
+            case "access_account":
+                accountsService.access_account(scanner);
                 break;
             default:
                 System.out.println("Invalid command");
