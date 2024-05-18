@@ -4,6 +4,7 @@ import dao.TransactionDao;
 import model.Transaction;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class TransactionsRepoService {
 
@@ -26,6 +27,17 @@ public class TransactionsRepoService {
             transactionDao.add(transaction);
         }
     }
+
+    public List<Transaction> getAllTransactions(String accountNumber) throws SQLException {
+        List<Transaction> transactions = transactionDao.getAllTransactionsByAccount(accountNumber);
+        if(transactions != null){
+            System.out.println("Transactions retrieved successfully");
+        }else {
+            System.out.println("No transactions for this account");
+        }
+        return transactions;
+    }
+
 
     public void removeTransaction(String transactionId) throws SQLException {
         Transaction transaction = getTransactionById(transactionId);

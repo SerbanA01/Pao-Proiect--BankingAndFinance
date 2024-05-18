@@ -5,6 +5,7 @@ import model.Transaction;
 import model.accounts.Account;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 public class TransactionService {
@@ -48,7 +49,31 @@ public class TransactionService {
         }
     }
 
+    public void readAll(String accountNumber) {
+        try {
+            List<Transaction> transactions = dbService.getAllTransactions(accountNumber);
+            for (Transaction transaction : transactions) {
+                if ( transaction.getReceiver().equals(accountNumber)){
+                    System.out.println("You received " + transaction.getAmount() + " from " + transaction.getSender());
+                }
+                if ( transaction.getSender().equals(accountNumber)){
+                    System.out.println("You sent " + transaction.getAmount() + " to " + transaction.getReceiver());
+                }
+            }
+            System.out.println("Do you want to see the transactions sorted by amount? (yes/no)");
+            Scanner scanner = new Scanner(System.in);
+            String answer = scanner.nextLine();
+            if (answer.equalsIgnoreCase("yes")) {
+                transactions.sort((t1, t2) -> (int) (t1.getAmount() - t2.getAmount()));
+                for (Transaction transaction : transactions) {
+                    System.out.println("Transaction id: " + transaction.getTransactionId() + " Receiver: " + transaction.getReceiver() + " Sender: " + transaction.getSender() + " Amount: " + transaction.getAmount());
 
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error reading all transactions");
+        }
+    }
     public void transactionInit(Scanner scanner, String senderId) throws SQLException {
         System.out.println("Enter receiver id: ");
         String receiverId = scanner.nextLine();

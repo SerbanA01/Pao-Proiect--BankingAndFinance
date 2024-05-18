@@ -1,5 +1,7 @@
 package dao;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import daoservices.DatabaseConnection;
 import model.Transaction;
@@ -32,6 +34,26 @@ public class TransactionDao implements DaoInterface<Transaction> {
         }
 
 
+    }
+    public List<Transaction> getAllTransactionsByAccount(String accountId) throws SQLException {
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT * FROM bankingdb.transactions WHERE sender = ? OR receiver = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, accountId);
+            statement.setString(2, accountId);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                String transactionId = rs.getString("transactionId");
+                String receiver = rs.getString("receiver");
+                String sender = rs.getString("sender");
+                double amount = rs.getDouble("amount");
+                transactions.add(new Transaction(transactionId, receiver, sender, amount));
+            }
+        }
+
+        return transactions;
     }
 
     @Override

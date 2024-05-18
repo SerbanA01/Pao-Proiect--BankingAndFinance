@@ -37,6 +37,27 @@ public class AccountsRepoService {
         }
         return checkingAccount;
     }
+    //i created 2 function that get the account but without printing it
+    public SavingsAccount updateSavingsAccountByNumber(String accountNumber) throws SQLException {
+        SavingsAccount savingsAccount = savingsAccountDao.read(accountNumber);
+        if(savingsAccount != null){
+            return savingsAccount;
+        }else {
+            System.out.println("No savings account with this number");
+        }
+
+        return null;
+    }
+
+    public CheckingAccount updateCheckingAccountByNumber(String accountNumber) throws SQLException {
+        CheckingAccount checkingAccount = checkingAccountDao.read(accountNumber);
+        if(checkingAccount != null){
+            return checkingAccount;
+        }else {
+            System.out.println("No checking account with this number");
+        }
+        return null;
+    }
 
     public void removeAccount(String typeOfAccount, String accountNumber) throws SQLException {
         Account account = getAccount(typeOfAccount, accountNumber);
