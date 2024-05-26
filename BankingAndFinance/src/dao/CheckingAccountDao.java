@@ -107,7 +107,7 @@ public class CheckingAccountDao implements DaoInterface<CheckingAccount> {
 
     @Override
     public void update(CheckingAccount checkingAccount) throws SQLException {
-        String sql = "UPDATE bankingdb.checkingaccounts SET balance = ?, overdraftLimit = ?, transactionFee = ?, debitCardNumber = ? WHERE accountNumber = ?";
+        String sql = "UPDATE bankingdb.checkingaccounts SET overdraftLimit = ?, transactionFee = ?, debitCardNumber = ? WHERE accountNumber = ?";
         String sql2 = "UPDATE bankingdb.accounts SET accountHolder = ?, balance = ? WHERE accountNumber = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql2);) {

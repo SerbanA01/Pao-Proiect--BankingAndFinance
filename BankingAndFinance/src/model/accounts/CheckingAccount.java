@@ -42,6 +42,18 @@ public class CheckingAccount extends Account  {
         this.debitCardNumber = debitCardNumber;
     }
 
+    @Override
+    public String toString() {
+        return "CheckingAccount{" +
+                "overdraftLimit=" + overdraftLimit +
+                ", transactionFee=" + transactionFee +
+                ", debitCardNumber='" + debitCardNumber + '\'' +
+                ", accountNumber='" + accountNumber + '\'' +
+                ", accountHolder='" + accountHolder + '\'' +
+                ", balance=" + balance +
+                '}';
+    }
+
 
 
 }

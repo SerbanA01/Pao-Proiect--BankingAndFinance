@@ -3,7 +3,8 @@ DROP TABLE IF EXISTS Transactions, StockInvestments, RealEstateInvestments, Inve
 
 
 
-
+CREATE DATABASE bankingdb;
+USE bankingdb;
 
 
 
