@@ -41,6 +41,15 @@ public class StockInvestment extends Investment {
     public void setStockSymbol(String stockSymbol) {
         this.stockSymbol = stockSymbol;
     }
-
+    @Override
+    public String toString() {
+        return "StockInvestment{" +
+                "investmentname=" + investmentName +
+                ", investmentValue=" + investmentValue +
+                ", numberOfStocks=" + numberOfStocks +
+                ", stockPrice=" + stockPrice +
+                ", stockSymbol='" + stockSymbol + '\'' +
+                '}';
+    }
 
 }

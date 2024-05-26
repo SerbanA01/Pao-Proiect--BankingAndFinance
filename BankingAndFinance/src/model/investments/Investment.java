@@ -2,9 +2,9 @@ package model.investments;
 
 public class Investment {
 
-    private String investmentId;
-    private String investmentName;
-    private double investmentValue;
+    protected String investmentId;
+    protected String investmentName;
+    protected double investmentValue;
 
 
     public Investment() {
